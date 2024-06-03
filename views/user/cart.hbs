@@ -1,0 +1,98 @@
+{{!-- user/cart.hbs --}}
+{{#if products.length}}
+<section>
+    <div class="container">
+        <table class="table mt-5">
+            <thead>
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr>
+                    <td><img src="/product-images/{{this.product._id}}.jpg" alt="Product Image"
+                            style="width: 50px; height: 50px;"></td>
+                    <td>{{this.product.productName}}</td>
+                    <td>{{this.product.price}}</td>
+                    <td>
+                        <button class="decrement-quantity" data-id="{{this.product._id}}" data-action="decrement"
+                            {{#if (eq this.quantity 1)}}disabled{{/if}}>-</button>
+                        <span>{{this.quantity}}</span>
+                        <button class="increment-quantity" data-id="{{this.product._id}}"
+                            data-action="increment">+</button>
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-danger remove-item" data-id="{{this.product._id}}" >Remove</a>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <hr class="mt-5 container">
+    <div class="container">
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <h3 class="mt-4">Total: RS: {{totalPrice}}</h3>
+                <a class="btn btn-success" href="/place-order" style="width: 100%;">Place Order</a>
+            </div>
+        </div>
+    </div>
+</section>
+{{else}}
+<h2>Cart is Empty</h2>
+{{/if}}
+
+<script>
+    $(document).ready(function () {
+        $('.increment-quantity').click(function () {
+            var productId = $(this).data('id');
+            updateQuantity(productId, 'increment');
+        });
+
+        $('.decrement-quantity').click(function () {
+            var productId = $(this).data('id');
+            updateQuantity(productId, 'decrement');
+        });
+
+        function updateQuantity(productId, action) {
+            $.ajax({
+                url: '/change-product-quantity',
+                method: 'POST',
+                data: { productId: productId, action: action },
+                success: function (response) {
+                    // Update the quantity on the page
+                    if (response.status) {
+                        location.reload(); // Reload the page to reflect the changes
+                    } else {
+                        alert('Error updating quantity');
+                    }
+                }
+            });
+        }
+
+        $('.remove-item').click(function () {
+            var productId = $(this).data('id');
+            // Send AJAX request to remove the item from the cart
+            $.ajax({
+                url: '/remove-item',
+                method: 'POST',
+                data: { productId: productId },
+                success: function (response) {
+                    if (response.status) {
+                        alert('Item removed');
+                        location.reload(); // Reload the page to reflect the changes
+                    } else {
+                        alert('Error removing item from cart');
+                    }
+                }
+            });
+        });
+    });
+</script>

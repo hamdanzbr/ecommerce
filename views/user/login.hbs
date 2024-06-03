@@ -1,0 +1,76 @@
+{{!-- login.hbs --}}
+<div class="carrier">
+    <div class="login-container">
+        <div class="login-header">Welcome to Shop Cart</div>
+        <p class="text-muted">Please do login to Explore the Products</p>
+        <form action="/login" method="POST" class="login-form">
+            {{#if loginErr}}
+            <p class="error-message">{{loginErr}}</p>
+            {{/if}}
+            <input type="email" class="login-input" placeholder="Email" name="Email" required>
+            <input type="password" class="login-input" placeholder="Password" name="Password" required>
+            <button type="submit" class="login-button">Log In</button>
+            <div class="login-footer">
+                Don't have an account? <a href="/signup">Sign Up</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .carrier {
+        background: linear-gradient(45deg, #f54ea2, #ff7676);
+        height: 92vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow-y: hidden;
+    }
+    .login-container {
+        background: aqua;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+    }
+    .login-header {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .login-input {
+        border: 1px solid #ddd;
+        padding: 0.75rem;
+        border-radius: 4px;
+    }
+    .login-button {
+        background: linear-gradient(45deg, #f54ea2, #ff7676);
+        color: #fff;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .login-button:hover {
+        opacity: 0.9;
+    }
+    
+    .login-footer a {
+        color: #f54ea2;
+        text-decoration: none;
+    }
+    .login-footer a:hover {
+        text-decoration: underline;
+    }
+    .error-message {
+        color: red;
+    }
+</style>

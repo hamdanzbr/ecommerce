@@ -1,0 +1,21 @@
+{{!-- view-order-products.hbs --}}
+<section>
+    <div class="container-md m-sm-2 mt-5">
+        <div class="row g-4">
+            {{#each order.products}}
+            <div class="col-md-3 col-sm-6 p-3">
+                <div class="card h-100">
+                    <img src="/product-images/{{this.productDetails._id}}.jpg" alt="Product Image">
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.productDetails.productName}}</h5>
+                        <h6 class="card-title">Price: {{this.productDetails.price}}</h6>
+                        <p class="card-text">Quantity: {{this.quantity}}</p>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</section>
+

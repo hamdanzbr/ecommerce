@@ -1,0 +1,26 @@
+<!-- views/admin/login.hbs -->
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Admin Login</div>
+        <div class="card-body">
+          <form action="/admin/login" method="POST">
+            <div class="mb-3">
+              {{#if loginErr}}
+              <p class="loginErr text-danger">{{loginErr}}</p>
+              {{/if}}
+              <label for="exampleInputEmail1" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" name="Email" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" name="Password">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

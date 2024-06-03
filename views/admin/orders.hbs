@@ -1,0 +1,164 @@
+{{!-- admin/order --}}
+<section>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <h1>All Orders</h1>
+                {{#if error}}
+                <p>{{error}}</p>
+                {{else}}
+                <div class="table-wrapper mt-3">
+                    <table class="table table-fixed table-bordered table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="bg-success" scope="col">
+                                    <center>SL</center>
+                                </th>
+                                <th class="bg-success" scope="col">
+                                    <center>Order ID</center>
+                                </th>
+                                <th class="bg-success" scope="col">
+                                    <center>User ID</center>
+                                </th>
+                                <th class="bg-success" scope="col">
+                                    <center>Address</center>
+                                </th>
+                                <th class="bg-success" scope="col">
+                                    <center>Mobile</center>
+                                </th>
+                                <th class="bg-success" scope="col">
+                                    <center>Total Amount</center>
+                                </th>
+                                <th class="bg-success" scope="col">
+                                    <center>Status</center>
+                                </th>
+                                <th class="bg-success" scope="col">
+                                    <center>Payment Method</center>
+                                </th>
+                                <th class="bg-success" scope="col">
+                                    <center>Date</center>
+                                </th>
+                                <th class="bg-success" scope="col">
+                                    <center>Tracking</center>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each orders}}
+                            <tr>
+                                <td class="bg-warning" data-label="SL">{{increment @index}}</td>
+                                <td class="bg-warning" data-label="Order ID">{{this._id}}</td>
+                                <td class="bg-warning" data-label="User ID">{{this.userId}}</td>
+                                <td class="bg-warning" data-label="Address">{{this.deliveryDetails.address}},{{this.deliveryDetails.pincode}}</td>
+                                <td class="bg-warning" data-label="Total Amount">{{this.deliveryDetails.mobile}}</td>
+
+                                <td class="bg-warning" data-label="Total Amount">{{this.totalAmount}}</td>
+                                <td class="bg-warning" data-label="Status"><span class="{{#if (eq status 'pending')}}text-danger{{else if (eq status 'placed')}}text-success{{/if}}">
+                                        {{this.status}}
+                                    </span></td>
+                                <td class="bg-warning" data-label="Payment Method">{{this.paymentMethod}}</td>
+                                <td class="bg-warning" data-label="Date">{{this.date}}</td>
+                                <td class="bg-warning" data-label="Tracking">
+                                    <form action="/update-tracking/{{this._id}}" method="POST" class="tracking-form">
+                                        <input type="hidden" name="orderId" value="{{this._id}}">
+                                        <input type="hidden" name="tracking" value="shipped">
+                                         <button type="submit"
+                                            class="btn {{#if (eq this.tracking 'shipped')}}btn-success{{else}}btn-danger{{/if}} tracking-button"
+                                            {{#if (eq this.status 'pending')}}disabled{{/if}}>
+                                            Shipped
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .table-wrapper {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .table-fixed thead {
+        position: sticky;
+        top: 0;
+        background: #f8f9fa;
+        z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+
+        .table thead,
+        .table tbody,
+        .table tr,
+        .table td,
+        .table th {
+            display: block;
+        }
+
+        .table thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        .table tr {
+            margin: 0 0 1rem 0;
+        }
+
+        .table td {
+            border: none;
+            position: relative;
+            padding-left: 50%;
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        .table td:before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 50%;
+            padding-left: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const trackingForms = document.querySelectorAll('.tracking-form');
+        trackingForms.forEach(form => {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const button = form.querySelector('.tracking-button');
+                const orderId = form.querySelector('input[name="orderId"]').value;
+
+                fetch(`/admin/update-tracking/${orderId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ orderId })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            button.classList.remove('btn-danger');
+                            button.classList.add('btn-success');
+                            button.textContent = 'Shipped';
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+</script>

@@ -1,0 +1,128 @@
+{{!-- place-order.hbs --}}
+<div class="container">
+    <div class="row">
+        <!-- Left Side: Address, Pincode, Mobile -->
+        <div class="col-md-6">
+            <form action="/place-order" method="POST" id="checkout-form">
+                <div class="mb-3">
+                    <h3>Enter Your Details</h3>
+                    <label for="address" class="form-label">Address</label>
+                    <textarea class="form-control" id="address" name="address" rows="4" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="pincode" class="form-label">Pincode</label>
+                    <input type="text" class="form-control" id="pincode" name="pincode" required>
+                </div>
+                <div class="mb-3">
+                    <label for="mobile" class="form-label">Mobile</label>
+                    <input type="text" class="form-control" id="mobile" name="mobile" required>
+                </div>
+                <input type="hidden" name="userId" value="{{user._id}}">
+                <input type="hidden" id="paymentMethod" name="paymentMethod" required>
+                <button type="submit" name="checkout" class="btn btn-primary">Checkout</button>
+            </form>
+        </div>
+        <!-- Right Side: Total Amount, Payment Method -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    <p class="card-text">Total Amount: RS: {{totalPrice}}</p>
+                    <div class="mb-3">
+                        <label for="paymentMethod" class="form-label">Payment Method</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="cod" required>
+                            <label class="form-check-label" for="cod">Cash on Delivery</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="onlinePayment" value="online" required>
+                            <label class="form-check-label" for="onlinePayment">Online Payment</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+$("#checkout-form").submit(function(e) {
+    e.preventDefault();
+
+    var paymentMethod = $("input[name='paymentMethod']:checked").val();
+
+    if (!paymentMethod) {
+        alert("Please select a payment method.");
+        return; // Exit if no payment method is selected
+    }
+
+    $("#paymentMethod").val(paymentMethod);
+    var formData = $('#checkout-form').serialize();
+
+    $.ajax({
+        url: '/place-order',
+        method: 'post',
+        data: formData,
+        success: function(response) {
+            if(response.codSuccess){
+                location.href='/order-success'
+            } else {
+                razorpayPayment(response)
+            }
+        }
+    });
+});
+
+
+function razorpayPayment(order){
+    var options = {
+        "key": "rzp_test_2LlJCVrSkpyFNy",
+        "amount": order.amount,
+        "currency": "INR",
+        "name": "Hamdan",
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": order.id,
+        "handler": function (response){
+            verifyPayment(response, order);
+        },
+        "prefill": {
+            "name": "Gaurav Kumar",
+            "email": "gaurav.kumar@example.com", 
+            "contact": "9000090000"
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+}
+
+function verifyPayment(payment, order) {
+    $.ajax({
+        url: '/verify-payment',
+        data: {
+            payment,
+            order
+        },
+        method: 'post',
+        success: (response) => {
+            if(response.status){
+                location.href = '/order-success';
+            } else {
+                alert('Payment verification failed');
+            }
+        },
+        error: (error) => {
+            console.error("Error in verification:", error);
+            alert('Payment verification failed');
+        }
+    });
+}
+</script>

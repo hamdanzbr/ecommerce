@@ -1,0 +1,53 @@
+{{!-- views/partials/user-header.hbs --}}
+<header>
+    <nav class="navbar navbar-expand-lg" style="background-color: aqua;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/"><img src="https://i.postimg.cc/Qd9kRktN/logo-no-background.png" alt="" style="height: 40px;"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Products</a>
+                    </li>
+                    <li class="nav-item">
+                       {{#unless isUserLoginpage}} <a id="cart-count" class="nav-link" href="/cart">Cart {{#unless isCartPage}} <span id="cart-badge" class="badge bg-success">{{#if cartCount}}{{cartCount}}{{else}}0{{/if}}</span> {{/unless}} </a>{{/unless}}
+
+
+                    </li>
+                    {{#if user}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders">Orders</a>
+                    </li>
+                    {{/if}}
+                </ul>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" style="background-color: yellowgreen;">
+
+                        {{#if user}}
+                        {{user.Name}}
+                        {{else}}
+                        Account
+                        {{/if}}
+
+                    </button>
+                    <ul class="dropdown-menu">
+                        <a class="dropdown-item text-primary" href="/signup">Signup <i class="fa-solid fa-user-plus"></i></a>
+
+                        {{#if user}}
+                        <a class="dropdown-item text-danger" href="/logout">Logout <i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+                        {{else}}
+                        <a class="dropdown-item text-success" href="/login">Login <i class="fa-solid fa-right-to-bracket"></i></a>
+                        {{/if}}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

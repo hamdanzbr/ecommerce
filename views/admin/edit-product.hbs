@@ -1,0 +1,40 @@
+{{!-- admin/edit-product.hbs --}}
+<section>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h3>Edit Product</h3>
+                <form action="/admin/edit-product/{{product._id}}" enctype="multipart/form-data" method="post">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" name="productName" value="{{product.productName}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <input type="text" class="form-control" id="category" name="category" value="{{product.category}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="text" class="form-control" id="price" name="price" value="{{product.price}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" required aria-valuetext="">{{product.description}}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <img src="/product-images/{{product._id}}.jpg" alt="" style="width: 50px; height:50px" id="imgView">
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="viewImage(event)">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function viewImage(event) {
+        document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0]);
+    }
+</script>

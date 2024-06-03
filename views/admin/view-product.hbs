@@ -1,0 +1,93 @@
+<section>
+    <div class="container mt-5">
+        <div class="row justify-content-end">
+            <a href="/admin/add-product" class="btn btn-success mb-3 w-25">Add Product</a>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-wrapper">
+                    <table class="table table-fixed table-bordered table-striped" id="productsTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">SL</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each products}}
+                            <tr>
+                                <td data-label="SL"><center>{{increment @index}}</center></td>
+                                <td data-label="Title"><center>{{this.productName}}</center></td>
+                                <td data-label="Category"><center>{{this.category}}</center></td>
+                                <td data-label="Price"><center>{{this.price}}</center></td>
+                                <td data-label="Description"><center>{{this.description}}</center></td>
+                                <td data-label="Image"><center><img src="/product-images/{{this._id}}.jpg" alt="Product Image" style="width: 50px; height: 50px;"></center></td>
+                                <td data-label="Edit"><center><a href="/admin/edit-product/{{this._id}}"><i class="fa-solid fa-pen" style="color: navy;"></i></a></center></td>
+                                <td data-label="Delete"><center><a href="/admin/delete-product/{{this._id}}" onclick="return confirm('do you want to delete {{this.productName}}')"><i class="fa-solid fa-trash" style="color: red;"></i></a></center></td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#productsTable').DataTable();
+});
+</script>
+
+<style>
+    .table-wrapper {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .table-fixed thead {
+        position: sticky;
+        top: 0;
+        background: #f8f9fa;
+        z-index: 1;
+    }
+    @media (max-width: 768px) {
+        .table thead,
+        .table tbody,
+        .table tr,
+        .table td,
+        .table th {
+            display: block;
+        }
+        .table thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+        .table tr {
+            margin: 0 0 1rem 0;
+        }
+        .table td {
+            border: none;
+            position: relative;
+            padding-left: 50%;
+            white-space: nowrap;
+            text-align: left;
+        }
+        .table td:before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 50%;
+            padding-left: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+    }
+</style>

@@ -1,0 +1,88 @@
+<!-- all-users.hbs -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header" style="background-color: rgb(231, 222, 225);">ALL USERS</div>
+                <div class="card-body">
+                    <div class="table-wrapper">
+                        <table class="table table-fixed table-bordered table-striped" id="usersTable">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="bg-success" scope="col">USER ID</th>
+                                    <th class="bg-success" scope="col">NAME</th>
+                                    <th class="bg-success" scope="col">EMAIL</th>
+                                    <th class="bg-success" scope="col">LAST LOGIN</th>
+                                    <th class="bg-success" scope="col">LAST LOGOUT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each users}}
+                                <tr>
+                                    <td style="background-color: yellow;" data-label="User ID">{{this._id}}</td>
+                                    <td style="background-color: yellow;" data-label="Name">{{this.Name}}</td>
+                                    <td style="background-color: yellow;" data-label="Email">{{this.Email}}</td>
+                                    <td style="background-color: yellow;" data-label="Last Login">{{formatDateWithDayAndTime this.lastLogin}}</td>
+                                    <td style="background-color: yellow;" data-label="Last Logout">{{formatDateWithDayAndTime this.lastLogout}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#usersTable').DataTable();
+});
+</script>
+
+<style>
+    .table-wrapper {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .table-fixed thead {
+        position: sticky;
+        top: 0;
+        background: #f8f9fa;
+        z-index: 1;
+    }
+    @media (max-width: 768px) {
+        .table thead,
+        .table tbody,
+        .table tr,
+        .table td,
+        .table th {
+            display: block;
+        }
+        .table thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+        .table tr {
+            margin: 0 0 1rem 0;
+        }
+        .table td {
+            border: none;
+            position: relative;
+            padding-left: 50%;
+            white-space: nowrap;
+            text-align: left;
+        }
+        .table td:before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 50%;
+            padding-left: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+    }
+</style>
